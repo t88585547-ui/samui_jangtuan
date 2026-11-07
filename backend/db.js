@@ -5,7 +5,7 @@ const db = new sqlite3.Database("./samui.sqlite");
 db.serialize(() => {
   db.run(`
         CREATE TABLE IF NOT EXISTS hotspot (
-        id INTEGER PRMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
         lat REAL NOT NULL,
         lng REAL NOT NULL,
@@ -39,4 +39,5 @@ const dbRun = (sqlm, params = []) => new Promise((resolve, reject) => {
     });
 });
 
-module.exports = { dbAll, dbRun };
+
+export {dbAll,dbRun}

@@ -1,7 +1,13 @@
 import axios from "axios";
+import https from 'https';
+import dns from 'dns';
 import { dbAll, dbRun } from "./db.js";
 
-exports.getHotspots = async (req, res) => {
+dns.setDefaultResultOrder('ipv4first');
+
+const ipv4Agent = new https.Agent({ family: 4 });
+
+export const getHotspots = async (req, res) => {
   try {
     const spots = await dbAll("SELECT * FROM hotspot");
     res.json(spots);
@@ -10,11 +16,14 @@ exports.getHotspots = async (req, res) => {
   }
 };
 
-exports.getWeather = async (req, res) => {
+export const getWeather = async (req, res) => {
   try {
     const url =
       "https://api.open-meteo.com/v1/forecast?latitude=9.5120&longitude=100.0136&current=temperature_2m,rain,wind_speed_10m";
-    const { data } = await axios.get(url);
+    const { data } = await axios.get(url, {
+      httpsAgent: ipv4Agent,
+      timeout: 5000
+    });
 
     const rain =
       req.query.simRain !== undefined
